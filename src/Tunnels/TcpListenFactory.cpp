@@ -46,7 +46,7 @@ std::vector<ITunnel*> TcpListenFactory::MakeTunnels(const std::string& desc)
 	memset(&listenAddr, 0, sizeof(listenAddr));
 	listenAddr.sin_family = AF_INET;
 	listenAddr.sin_port = htons(port);
-	inet_pton(AF_INET, ipaddrDesc.c_str(), &listenAddr.sin_addr);
+	//inet_pton(AF_INET, ipaddrDesc.c_str(), &listenAddr.sin_addr);
 	
 	int listenSock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listenSock < 0)
@@ -65,14 +65,16 @@ std::vector<ITunnel*> TcpListenFactory::MakeTunnels(const std::string& desc)
 	if (listen(listenSock, count) < 0)
 	{
 		close(listenSock);
-		fprintf(stderr, "bind listen address error.\n");
+		fprintf(stderr, "listen error.\n");
 		return result;
 	}
 
+    printf("listen on %d\n", port);
 	for (int i = 0; i < count; ++i)
 	{
 		sockaddr_in remoteaddr;
 		socklen_t addrlen = sizeof(remoteaddr);
+        printf("wait accept for %d client\n", i);
 		int sk = accept(listenSock, (sockaddr*)&remoteaddr, &addrlen);
 
 		if (sk < 0)
@@ -81,6 +83,7 @@ std::vector<ITunnel*> TcpListenFactory::MakeTunnels(const std::string& desc)
 			break;
 		}
 
+        printf(get %d client\n", i);
 		result.push_back(new TcpTunnel(sk));
 	}
 	
