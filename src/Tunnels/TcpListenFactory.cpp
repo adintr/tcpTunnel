@@ -83,7 +83,7 @@ std::vector<ITunnel*> TcpListenFactory::MakeTunnels(const std::string& desc)
 			break;
 		}
 
-        printf(get %d client\n", i);
+        printf("get %d client\n", i);
 		result.push_back(new TcpTunnel(sk));
 	}
 	
