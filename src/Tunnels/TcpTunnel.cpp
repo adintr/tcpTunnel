@@ -4,6 +4,7 @@
 #include <WinSock2.h>
 #else
 #include <unistd.h>
+#include <sys/socket.h>
 #define closesocket close
 #endif
 
