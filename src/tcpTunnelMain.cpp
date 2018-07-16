@@ -1,8 +1,14 @@
 #include <iostream>
-#include <unistd.h>
 #include <stdio.h>
 #include <thread>
 #include "TunnelFactoryManager.h"
+
+#ifdef WIN32
+#include <WinSock2.h>
+#pragma comment(lib, "Ws2_32.lib")
+#else
+#include <unistd.h>
+#endif
 
 /*  √¸¡Ó––≤Œ ˝
  *    tcpTunnel -t tcpconnect://127.0.0.1:8080  -t tcplisten://127.0.0.1:8081/2
@@ -14,6 +20,15 @@
 
 int main(int argc, char *argv[])
 {
+#ifdef WIN32
+	WSADATA wsaData;
+
+	int err = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (err != NO_ERROR)
+		return -1;
+
+#endif
+
 	TunnelFactoryManager factorys;
 
 	factorys.Reg("tcpconnect", new TcpConnectFactory());

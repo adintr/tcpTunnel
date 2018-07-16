@@ -1,12 +1,18 @@
 #include "TcpListenFactory.h"
 #include "TcpTunnel.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#ifdef WIN32
+#include <WinSock2.h>
+#include <ws2tcpip.h>
+#else
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <stdlib.h>
-#include <string.h>
+#endif
 
 TcpListenFactory::TcpListenFactory()
 {
@@ -57,14 +63,14 @@ std::vector<ITunnel*> TcpListenFactory::MakeTunnels(const std::string& desc)
 
 	if (bind(listenSock, (sockaddr*)&listenAddr, sizeof(listenAddr)) < 0)
 	{
-		close(listenSock);
+		closesocket(listenSock);
 		fprintf(stderr, "bind listen address error.\n");
 		return result;
 	}
 
 	if (listen(listenSock, count) < 0)
 	{
-		close(listenSock);
+		closesocket(listenSock);
 		fprintf(stderr, "listen error.\n");
 		return result;
 	}
@@ -87,6 +93,6 @@ std::vector<ITunnel*> TcpListenFactory::MakeTunnels(const std::string& desc)
 		result.push_back(new TcpTunnel(sk));
 	}
 	
-	close(listenSock);
+	closesocket(listenSock);
 	return result;
 }

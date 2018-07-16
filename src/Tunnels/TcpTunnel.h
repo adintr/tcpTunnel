@@ -1,6 +1,5 @@
 #pragma once
 #include "../ITunnel.h"
-#include <sys/socket.h>
 
 class TcpTunnel : public ITunnel
 {

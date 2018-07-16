@@ -1,11 +1,18 @@
 #include "TcpConnectFactory.h"
 #include "TcpTunnel.h"
 #include <stdio.h>
-#include <sys/socket.h>
 #include <string.h>
-#include <arpa/inet.h>
 #include <stdlib.h>
+
+#ifdef WIN32
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+#else
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #include <unistd.h>
+#endif
+
 
 TcpConnectFactory::TcpConnectFactory()
 {
@@ -47,7 +54,7 @@ std::vector<ITunnel*> TcpConnectFactory::MakeTunnels(const std::string& desc)
 
 	if (connect(connSock, (sockaddr*)&connAddr, sizeof(connAddr)) < 0)
 	{
-		close(connSock);
+		closesocket(connSock);
 		fprintf(stderr, "connect error.\n");
 		return tunnels;
 	}
