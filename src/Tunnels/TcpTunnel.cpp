@@ -4,6 +4,7 @@
 #include <WinSock2.h>
 #else
 #include <unistd.h>
+#define closesocket close
 #endif
 
 TcpTunnel::TcpTunnel(int sk)

@@ -12,6 +12,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#define closesocket close
 #endif
 
 TcpListenFactory::TcpListenFactory()
